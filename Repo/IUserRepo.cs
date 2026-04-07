@@ -8,4 +8,5 @@ public interface IUserRepo
     Task<User> AddUserAsync(User user);
     Task<User?> GetByIdAsync(int id);
     Task SaveChangesAsync();
+    Task Delete(User user);
 }

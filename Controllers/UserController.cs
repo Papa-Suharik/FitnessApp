@@ -13,7 +13,6 @@ namespace FitnessApp.Controllers;
 public class UserController : ControllerBase
 {
     private readonly IUserService _userService;
-
     public UserController(IUserService userService)
     {
         _userService = userService;
@@ -52,6 +51,14 @@ public class UserController : ControllerBase
         }
 
         return Ok(user);
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteUser(int id)
+    {
+        await _userService.DeleteUser(id);
+
+        return NoContent();
     }
 
 }

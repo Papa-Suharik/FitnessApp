@@ -88,5 +88,14 @@ public class UserService : IUserService
         
         return dto;
     }
+    public async Task DeleteUser(int id)
+    {
+        var user = await _repo.GetByIdAsync(id);
+
+        if(user != null)
+        {
+            await _repo.Delete(user);
+        }
+    }
 }
 
