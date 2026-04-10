@@ -9,7 +9,7 @@ using FitnessApp.CustomMiddleware;
 namespace FitnessApp.Controllers;
 
 [ApiController]
-[Route("api/user")]
+[Route("api/users")]
 public class UserController : ControllerBase
 {
     private readonly IUserService _userService;
@@ -23,18 +23,13 @@ public class UserController : ControllerBase
     {
         var user = await _userService.CreateAsync(dto);
 
-        return CreatedAtAction(nameof(GetById), new {id = user.Id});
+        return CreatedAtAction(nameof(GetById), new {id = user.Id}, user);
     }
 
-    [HttpPatch("profile/{id}")]
-    public async Task<IActionResult> Profile(int id, [FromBody] CreateUserProfileDto dto)
+    [HttpPatch("{id}")]
+    public async Task<IActionResult> UpdateProfile(int id, [FromBody] CreateUserProfileDto dto)
     {
         var user = await _userService.ProfileSetupAsync(id, dto);
-
-        if(user == null)
-        {
-            return NotFound("User hasn't been found");
-        }
 
         return Ok(user);
     }
@@ -45,16 +40,11 @@ public class UserController : ControllerBase
     {
         var user = await _userService.GetByIdAsync(id);
 
-        if(user == null)
-        {
-            return NotFound();
-        }
-
         return Ok(user);
     }
 
     [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteUser(int id)
+    public async Task<IActionResult> Delete(int id)
     {
         await _userService.DeleteUser(id);
 

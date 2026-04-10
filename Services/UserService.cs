@@ -21,9 +21,9 @@ public class UserService : IUserService
         _repo = repo;
         _jwtProvider = jwtProvider;
     }
-    public async Task<User> CreateAsync(CreateUserDto dto)
+    public async Task<UserDto> CreateAsync(CreateUserDto dto)
     {
-        var result = _repo.GetByEmailAsync(dto.Email!);
+        var result = await _repo.GetByEmailAsync(dto.Email!);
 
         if(result != null)
         {
@@ -35,7 +35,9 @@ public class UserService : IUserService
 
         await _repo.AddUserAsync(user);
 
-        return user;
+        var userDto = new UserDto(user);
+
+        return userDto;
     }
 
     public async Task<UserDto?> ProfileSetupAsync(int id, CreateUserProfileDto dto)
@@ -77,11 +79,6 @@ public class UserService : IUserService
         if(user == null)
         {
             throw new UserNotFoundException("No user found!");
-        }
-
-        if(user.Profile == null)
-        {
-            throw new Exception("User profile is not submitted");
         }
 
         var dto = new UserDto(user);

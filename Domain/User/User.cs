@@ -36,35 +36,24 @@ public class CreateUserDto
     [Required]
     public string Password { get; set; } = null!;
 }
-
 public class UserDto
 {
-    [Required]
-    [EmailAddress]
-    public string? Email { get; set; }
-
-    [Required]
+    public int Id { get; set; }
+    public string Email { get; set; }
     public string? Name { get; set; }
-
-    [Required]
-    public int Age { get; set; }
-
-    [Required]
-    public double Height { get; set; }
-
-    [Required]
-    public double Weight { get; set; }
-
-    [Required]
-    public Gender Gender { get; set; }
-
+    public int? Age { get; set; }
+    public double? Height { get; set; }
+    public double? Weight { get; set; }
+    public Gender? Gender { get; set; }
     public UserDto(User user)
     {
+
+        Id = user.Id;
         Email = user.Email;
-        Name = user.Profile!.Name;
-        Age = user.Profile!.Age;
-        Height = user.Profile.Height;
-        Weight = user.Profile.Weight;
-        Gender = user.Profile.Gender;
+        Name = user.Profile?.Name;
+        Age = user.Profile?.Age;
+        Height = user.Profile?.Height;
+        Weight = user.Profile?.Weight;
+        Gender = user.Profile?.Gender;
     }
 }
