@@ -39,21 +39,10 @@ public class CreateUserDto
 public class UserDto
 {
     public int Id { get; set; }
-    public string Email { get; set; }
+    public string Email { get; set; } = null!;
     public string? Name { get; set; }
     public int? Age { get; set; }
     public double? Height { get; set; }
     public double? Weight { get; set; }
     public Gender? Gender { get; set; }
-    public UserDto(User user)
-    {
-
-        Id = user.Id;
-        Email = user.Email;
-        Name = user.Profile?.Name;
-        Age = user.Profile?.Age;
-        Height = user.Profile?.Height;
-        Weight = user.Profile?.Weight;
-        Gender = user.Profile?.Gender;
-    }
 }

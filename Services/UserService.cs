@@ -7,6 +7,7 @@ using System.Xml;
 using Microsoft.AspNetCore.Http.HttpResults;
 using FitnessApp.CustomMiddleware;
 using Microsoft.VisualBasic;
+using FitnessApp.Extensions;
 
 namespace FitnessApp.Services;
 
@@ -35,9 +36,7 @@ public class UserService : IUserService
 
         await _repo.AddUserAsync(user);
 
-        var userDto = new UserDto(user);
-
-        return userDto;
+        return user.ToDto();
     }
 
     public async Task<UserDto?> ProfileSetupAsync(int id, CreateUserProfileDto dto)
@@ -53,7 +52,7 @@ public class UserService : IUserService
 
         await _repo.SaveChangesAsync();
 
-        return new UserDto(user);
+        return user.ToDto();
     }
 
     public async Task<string> LoginAsync(CreateUserDto dto)
@@ -80,10 +79,8 @@ public class UserService : IUserService
         {
             throw new UserNotFoundException("No user found!");
         }
-
-        var dto = new UserDto(user);
         
-        return dto;
+        return user.ToDto();
     }
     public async Task DeleteUser(int id)
     {
