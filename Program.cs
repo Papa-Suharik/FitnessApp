@@ -11,6 +11,7 @@ using System.Text;
 using Microsoft.AspNetCore.Identity;
 using FitnessApp.Domain.User;
 using FitnessApp.CustomMiddleware;
+using FitnessApp.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +19,15 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
 });
+
+builder.Services.AddProblemDetails(configure =>
+{
+   configure.CustomizeProblemDetails = context =>
+   {
+        context.ProblemDetails.Extensions.TryAdd("requestId", context.HttpContext.TraceIdentifier);   
+   };
+});
+builder.Services.AddExceptionHandler<ExceptionHandler>();
 
 builder.Services.AddDbContext<ApplicationContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
@@ -50,7 +60,8 @@ builder.Services.AddControllers();
 
 var app = builder.Build();
 
-app.UseErrorsMiddlware();
+app.UseExceptionHandler();
+// app.UseErrorsMiddlware();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
