@@ -1,6 +1,6 @@
 namespace FitnessApp.Extensions;
 
-using FitnessApp.CustomMiddleware;
+using FitnessApp.CustomExceptions;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,7 +10,9 @@ public class ExceptionHandler(IProblemDetailsService problemDetailsService) : IE
     {
         httpContext.Response.StatusCode = exception switch
         {
-            UserNotFoundException => StatusCodes.Status400BadRequest,
+            UserNotFoundException => StatusCodes.Status404NotFound,
+            WrongDataProvidedException => StatusCodes.Status400BadRequest,
+            DuplicateUserException => StatusCodes.Status400BadRequest,
             _ => StatusCodes.Status500InternalServerError
         };
 

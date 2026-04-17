@@ -5,9 +5,9 @@ using System.Data;
 using System.Linq.Expressions;
 using System.Xml;
 using Microsoft.AspNetCore.Http.HttpResults;
-using FitnessApp.CustomMiddleware;
 using Microsoft.VisualBasic;
 using FitnessApp.Extensions;
+using FitnessApp.CustomExceptions;
 
 namespace FitnessApp.Services;
 

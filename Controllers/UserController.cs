@@ -4,7 +4,6 @@ using FitnessApp.Services;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using FitnessApp.Domain.User;
 using Microsoft.AspNetCore.Authorization;
-using FitnessApp.CustomMiddleware;
 
 namespace FitnessApp.Controllers;
 

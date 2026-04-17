@@ -10,10 +10,15 @@ using Microsoft.EntityFrameworkCore;
 using System.Text;
 using Microsoft.AspNetCore.Identity;
 using FitnessApp.Domain.User;
-using FitnessApp.CustomMiddleware;
 using FitnessApp.Extensions;
+using FluentValidation;
+using Microsoft.EntityFrameworkCore.Query;
+using FluentValidation.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly, includeInternalTypes: true);
+builder.Services.AddFluentValidationAutoValidation();
 
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
@@ -61,7 +66,6 @@ builder.Services.AddControllers();
 var app = builder.Build();
 
 app.UseExceptionHandler();
-// app.UseErrorsMiddlware();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
