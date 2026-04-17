@@ -22,9 +22,9 @@ public class UserService : IUserService
         _repo = repo;
         _jwtProvider = jwtProvider;
     }
-    public async Task<UserDto> CreateAsync(CreateUserDto dto)
+    public async Task<UserDto> CreateAsync(CreateUserDto dto, CancellationToken cancellationToken)
     {
-        var result = await _repo.GetByEmailAsync(dto.Email!);
+        var result = await _repo.GetByEmailAsync(dto.Email, cancellationToken);
 
         if(result != null)
         {
@@ -34,14 +34,14 @@ public class UserService : IUserService
         var user = new User(dto.Email, "");
         user.ChangePassword(_passwordHasher.HashPassword(user, dto.Password));
 
-        await _repo.AddUserAsync(user);
+        await _repo.AddUserAsync(user, cancellationToken);
 
         return user.ToDto();
     }
 
-    public async Task<UserDto?> ProfileSetupAsync(int id, CreateUserProfileDto dto)
+    public async Task<UserDto?> ProfileSetupAsync(int id, CreateUserProfileDto dto, CancellationToken cancellationToken)
     {
-        var user = await _repo.GetByIdAsync(id);
+        var user = await _repo.GetByIdAsync(id, cancellationToken);
 
         if(user == null)
         {
@@ -50,14 +50,14 @@ public class UserService : IUserService
 
         user.SetUserProfile(dto);
 
-        await _repo.SaveChangesAsync();
+        await _repo.SaveChangesAsync(cancellationToken);
 
         return user.ToDto();
     }
 
-    public async Task<string> LoginAsync(CreateUserDto dto)
+    public async Task<string> LoginAsync(CreateUserDto dto, CancellationToken cancellationToken)
     {
-        var user = await _repo.GetByEmailAsync(dto.Email) ?? throw new Exception("No user found!");
+        var user = await _repo.GetByEmailAsync(dto.Email, cancellationToken) ?? throw new Exception("No user found!");
 
         var verified = _passwordHasher.VerifyHashedPassword(user, user.PasswordHash, dto.Password);
 
@@ -71,9 +71,9 @@ public class UserService : IUserService
         return token;
     }
 
-    public async Task<UserDto> GetByIdAsync(int id)
+    public async Task<UserDto> GetByIdAsync(int id, CancellationToken cancellationToken)
     {
-        var user = await _repo.GetByIdAsync(id);
+        var user = await _repo.GetByIdAsync(id, cancellationToken);
 
         if(user == null)
         {
@@ -82,13 +82,13 @@ public class UserService : IUserService
         
         return user.ToDto();
     }
-    public async Task DeleteUser(int id)
+    public async Task DeleteUser(int id, CancellationToken cancellationToken)
     {
-        var user = await _repo.GetByIdAsync(id);
+        var user = await _repo.GetByIdAsync(id, cancellationToken);
 
         if(user != null)
         {
-            await _repo.Delete(user);
+            await _repo.Delete(user, cancellationToken);
         }
     }
 }
