@@ -17,9 +17,14 @@ public class ExceptionHandler(IProblemDetailsService problemDetailsService, ILog
             _ => StatusCodes.Status500InternalServerError
         };
 
-        if(httpContext.Response.StatusCode == 500)
+        if(exception is not DomainException)
         {
             logger.LogError(exception, "Unhandled exception occured");
+        }
+
+        if(exception is OperationCanceledException)
+        {
+            logger.LogError(exception, "Operation was cancelled");
         }
 
         return await problemDetailsService.TryWriteAsync(new ProblemDetailsContext

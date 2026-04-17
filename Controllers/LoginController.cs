@@ -15,9 +15,9 @@ public class LoginHandler : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Login(CreateUserDto dto)
+    public async Task<IActionResult> Login(CreateUserDto dto, CancellationToken cancellationToken)
     {
-        string? token = await _loginService.GenerateToken(dto);
+        string? token = await _loginService.GenerateToken(dto, cancellationToken);
 
         if(token == null)
         {

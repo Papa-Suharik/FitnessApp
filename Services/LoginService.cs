@@ -27,9 +27,9 @@ public class LoginService : ILoginService
         return true;
     }
 
-    public async Task<string?> GenerateToken(CreateUserDto dto)
+    public async Task<string?> GenerateToken(CreateUserDto dto, CancellationToken cancellationToken)
     {
-        var user = await _userRepo.GetByEmailAsync(dto.Email);
+        var user = await _userRepo.GetByEmailAsync(dto.Email, cancellationToken);
 
         if(user == null)
         {
