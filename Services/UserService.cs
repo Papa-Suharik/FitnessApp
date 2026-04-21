@@ -45,7 +45,7 @@ public class UserService : IUserService
 
         if(user == null)
         {
-            throw new UserNotFoundException("No user found!");
+            throw new UserNotFoundException($"User with id {id} does not exist");
         }
 
         user.SetUserProfile(dto);
@@ -77,7 +77,7 @@ public class UserService : IUserService
 
         if(user == null)
         {
-            throw new UserNotFoundException("No user found!");
+            throw new UserNotFoundException($"User with id {id} does not exist");
         }
         
         return user.ToDto();

@@ -5,38 +5,56 @@ using FitnessApp.Services;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
-public class ExceptionHandler(IProblemDetailsService problemDetailsService, ILogger<UserService> logger) : IExceptionHandler
+public class GlobalExceptionHandler(IProblemDetailsService problemDetailsService, ILogger<GlobalExceptionHandler> logger) : IExceptionHandler
 {
     public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
     {
-        httpContext.Response.StatusCode = exception switch
-        {
-            UserNotFoundException => StatusCodes.Status404NotFound,
-            WrongDataProvidedException => StatusCodes.Status400BadRequest,
-            DuplicateUserException => StatusCodes.Status400BadRequest,
-            _ => StatusCodes.Status500InternalServerError
-        };
 
-        if(exception is not DomainException)
+        if (exception is OperationCanceledException)
         {
-            logger.LogError(exception, "Unhandled exception occured");
+            logger.LogWarning(exception, "Operation was cancelled");
+            return true;
         }
 
-        if(exception is OperationCanceledException)
+        if (exception is DomainException dex)
         {
-            logger.LogError(exception, "Operation was cancelled");
+            logger.LogError(exception, "Domain exception occured");
+            httpContext.Response.StatusCode = dex.StatusCode;
+            return await problemDetailsService.TryWriteAsync(CreateCustomContext(dex, httpContext));
         }
 
-        return await problemDetailsService.TryWriteAsync(new ProblemDetailsContext
+        logger.LogError(exception, "Unhandled exception occured");
+        httpContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
+        return await problemDetailsService.TryWriteAsync(CreateGenericContext(exception, httpContext));
+
+    }
+    public ProblemDetailsContext CreateCustomContext(DomainException ex, HttpContext httpContext)
+    {
+        return new ProblemDetailsContext
         {
             HttpContext = httpContext,
-            Exception = exception,
+            Exception = ex,
             ProblemDetails = new ProblemDetails
             {
-                Type = exception.GetType().Name,
-                Title = "An error occured",
-                Detail = exception.Message
+                Type = ex.GetType().Name,
+                Title = ex.Title,
+                Detail = ex.Message,
+                Instance = httpContext.Request.Path.ToString()
             }
-        });
+        };
+    }
+    public ProblemDetailsContext CreateGenericContext(Exception ex, HttpContext httpContext)
+    {
+        return new ProblemDetailsContext
+        {
+            HttpContext = httpContext,
+            Exception = ex,
+            ProblemDetails = new ProblemDetails
+            {
+                Type = ex.GetType().Name,
+                Title = "Internal error occured",
+                Detail = ex.Message
+            }
+        };
     }
 }
