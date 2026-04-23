@@ -3,9 +3,9 @@ using FluentValidation;
 
 namespace FitnessApp.Validators;
 
-public class CreateuserDtoValidator : AbstractValidator<CreateUserDto>
+public class CreateUserDtoValidator : AbstractValidator<CreateUserDto>
 {
-    public CreateuserDtoValidator()
+    public CreateUserDtoValidator()
     {
         RuleFor(x => x.Email)
             .NotEmpty().WithMessage("Email is required")
@@ -20,14 +20,14 @@ public class CreateUserProfileDtoValidator : AbstractValidator<CreateUserProfile
 {
     public CreateUserProfileDtoValidator()
     {
-        RuleFor(x => x.Name).NotEmpty().WithMessage("Name ir required");
+        RuleFor(x => x.Name).NotEmpty().WithMessage("Name is required");
 
-        RuleFor(x => x.Age).NotEmpty().WithMessage("Name is required").ExclusiveBetween(18, 99).WithMessage("Age must be between 18 and 99");
+        RuleFor(x => x.Age).InclusiveBetween(5, 99).WithMessage("Age must be between 5 and 99");
 
-        RuleFor(x => x.Height).NotEmpty().WithMessage("Height is required").ExclusiveBetween(100, 300).WithMessage("Height must be between 100 and 300");
+        RuleFor(x => x.Height).InclusiveBetween(50, 300).WithMessage("Height must be between 50 and 300");
 
-        RuleFor(x => x.Weight).NotEmpty().WithMessage("Weight is required").ExclusiveBetween(30, 300).WithMessage("Weigth must be between 30 and 300");
+        RuleFor(x => x.Weight).InclusiveBetween(30, 300).WithMessage("Weight must be between 30 and 300");
 
-        RuleFor(x => x.Gender).NotEmpty().WithMessage("Gender is required");
+        RuleFor(x => x.Gender).IsInEnum().WithMessage("Gender is required");
     }
 }

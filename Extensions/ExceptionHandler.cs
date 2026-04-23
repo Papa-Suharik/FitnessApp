@@ -18,7 +18,7 @@ public class GlobalExceptionHandler(IProblemDetailsService problemDetailsService
 
         if (exception is DomainException dex)
         {
-            logger.LogError(exception, "Domain exception occured");
+            logger.LogWarning(exception, "Domain exception occured");
             httpContext.Response.StatusCode = dex.StatusCode;
             return await problemDetailsService.TryWriteAsync(CreateCustomContext(dex, httpContext));
         }

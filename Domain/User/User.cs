@@ -4,6 +4,8 @@ using FitnessApp.Domain.User;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
+using FitnessApp.Extensions;
+using System.Net;
 
 public class User
 {
@@ -11,6 +13,7 @@ public class User
     public string Email { get; private set; } = null!;
     public string PasswordHash { get; private set; } = null!;
     public UserProfile? Profile { get; private set; }
+    public ICollection<RefreshToken> RefreshTokens {get; set;} = new List<RefreshToken>();
     private User() { }
     public User(string email, string passwordHash)
     {
