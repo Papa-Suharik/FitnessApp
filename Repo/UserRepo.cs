@@ -20,9 +20,7 @@ public class UserRepo : IUserRepo
     public async Task<User> AddUserAsync(User user, CancellationToken cancellationToken)
     {
         await _context.AddAsync(user, cancellationToken);
-
-        await _context.SaveChangesAsync(cancellationToken);
-
+        
         return user;
     }
     public async Task<User?> GetByIdAsync(int id, CancellationToken cancellationToken)

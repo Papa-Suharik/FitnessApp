@@ -39,7 +39,7 @@ public class GlobalExceptionHandler(IProblemDetailsService problemDetailsService
                 Type = ex.GetType().Name,
                 Title = ex.Title,
                 Detail = ex.Message,
-                Instance = httpContext.Request.Path.ToString()
+                Instance = $"{httpContext.Request.Method} {httpContext.Request.Path}"
             }
         };
     }
@@ -53,7 +53,8 @@ public class GlobalExceptionHandler(IProblemDetailsService problemDetailsService
             {
                 Type = ex.GetType().Name,
                 Title = "Internal error occured",
-                Detail = ex.Message
+                Detail = ex.Message,
+                Instance = $"{httpContext.Request.Method} {httpContext.Request.Path}"
             }
         };
     }
