@@ -1,6 +1,7 @@
 using FitnessApp.Domain.User;
 using FitnessApp.Services;
 using Microsoft.AspNetCore.Mvc; 
+using FitnessApp.DTOs;
 
 namespace FitnessApp.Controllers;
 
@@ -15,15 +16,10 @@ public class LoginHandler : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Login(CreateUserDto dto, CancellationToken cancellationToken)
+    public async Task<IActionResult> Login(LoginUserDto dto, CancellationToken cancellationToken)
     {
-        string? token = await _loginService.GenerateToken(dto, cancellationToken);
+        var result = await _loginService.LoginUser(dto, cancellationToken);
 
-        if(token == null)
-        {
-            return BadRequest("Something went wrong");
-        }
-
-        return Ok(token);
+        return Ok(result);
     }   
 }

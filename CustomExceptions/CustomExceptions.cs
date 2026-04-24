@@ -26,4 +26,10 @@ public class DuplicateUserException : DomainException
     public override int StatusCode => StatusCodes.Status400BadRequest;
     public override string Title => "User already exists";
 }
+public class AuthenticationFailedException : DomainException
+{
+    public AuthenticationFailedException(string message) : base(message){}
+    public override int StatusCode => StatusCodes.Status401Unauthorized;
+    public override string Title => "Login or password is incorrect!";
+}
 

@@ -1,9 +1,9 @@
 namespace FitnessApp.Services;
 
 using FitnessApp.Domain.User;
+using FitnessApp.DTOs;
 
 public interface ILoginService
 {
-    Task<bool> AuthComplete(User user, string password);
-    Task<string?> GenerateToken(CreateUserDto dto, CancellationToken cancellationToken);
+    Task<AuthResultDto> LoginUser(LoginUserDto dto, CancellationToken token);
 }

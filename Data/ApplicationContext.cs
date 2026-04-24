@@ -47,8 +47,8 @@ public class ApplicationContext : DbContext
             entity.ToTable("RefreshTokens");
             entity.HasKey(e => e.Id);
             entity.Property(e => e.Id).IsRequired();
-            entity.Property(e => e.Token).IsRequired().HasMaxLength(200);
-            entity.HasIndex(e => e.Token).IsUnique();
+            entity.Property(e => e.HashedToken).IsRequired().HasMaxLength(200);
+            entity.HasIndex(e => e.HashedToken).IsUnique();
             entity.Property(e => e.ExpiresOnUtc).IsRequired();
             entity.Property(e => e.UserId).IsRequired();
         });

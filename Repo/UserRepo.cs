@@ -1,6 +1,7 @@
 using System.Reflection.Metadata.Ecma335;
 using FitnessApp.Data;
 using FitnessApp.Domain.User;
+using FitnessApp.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -36,5 +37,10 @@ public class UserRepo : IUserRepo
     {
         _context.Remove(user);
         await _context.SaveChangesAsync(cancellationToken);
+    }
+
+    public async Task AddRefreshToken(RefreshToken refreshToken, CancellationToken cancellationToken)
+    {
+        await _context.AddAsync(refreshToken, cancellationToken);
     }
 }

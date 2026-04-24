@@ -74,7 +74,6 @@ public class UserDto
     public double? Weight { get; set; }
     public Gender? Gender { get; set; }
 }
-
 public enum Gender
 {
     male,

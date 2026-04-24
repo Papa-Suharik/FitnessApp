@@ -15,8 +15,8 @@ public class UserService : IUserService
 {
     private readonly IPasswordHasher<User> _passwordHasher;  
     private readonly IUserRepo _repo;
-    private readonly IJwtProvider _jwtProvider;
-    public UserService(IPasswordHasher<User> passwordHasher, IUserRepo repo, IJwtProvider jwtProvider)
+    private readonly IGlobalTokenHandler _jwtProvider;
+    public UserService(IPasswordHasher<User> passwordHasher, IUserRepo repo, IGlobalTokenHandler jwtProvider)
     {
         _passwordHasher = passwordHasher;
         _repo = repo;
@@ -35,6 +35,8 @@ public class UserService : IUserService
         user.ChangePassword(_passwordHasher.HashPassword(user, dto.Password));
 
         await _repo.AddUserAsync(user, cancellationToken);
+
+        await _repo.SaveChangesAsync(cancellationToken);
 
         return user.ToDto();
     }
